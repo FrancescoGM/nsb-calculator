@@ -275,7 +275,7 @@ export const scrollList: Scroll[] = [
     description: "Buff de CDR + 2%",
     type: "percentage",
     stat: "cdr",
-    value: 0.02,
+    value: 2,
     quantity: 0,
   },
   {
@@ -427,7 +427,7 @@ export const scrollList: Scroll[] = [
     description: "Buff de CDR + 1%",
     type: "percentage",
     stat: "cdr",
-    value: 0.01,
+    value: 1,
     quantity: 0,
     rank: "C",
   },
