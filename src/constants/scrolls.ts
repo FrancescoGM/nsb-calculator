@@ -49,7 +49,7 @@ export const scrollList: Scroll[] = [
     description: "Buff de Defesa + 6",
     type: "flat",
     stat: "defense",
-    value: 0.06,
+    value: 6,
     quantity: 0,
   },
   {
@@ -479,7 +479,7 @@ export const scrollList: Scroll[] = [
     description: "Buff de Redução de Crítico + 5%", // ← valor da lista original (parece ter sido 51% por engano?)
     type: "percentage",
     stat: "criticalReduction",
-    value: 0.05,
+    value: 2,
     quantity: 0,
     rank: "C",
   },
@@ -489,7 +489,7 @@ export const scrollList: Scroll[] = [
     description: "Buff de Esquiva + 1%",
     type: "percentage",
     stat: "evasion",
-    value: 0.01,
+    value: 1,
     quantity: 0,
     rank: "C",
   },

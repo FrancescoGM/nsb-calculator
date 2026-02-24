@@ -85,7 +85,7 @@ export default function Home() {
   const hpRegen =
     0.3 +
     vitality * 0.01 +
-    calculateScroll(activeScrolls, "percentage", "chakraRegen") / 5;
+    calculateScroll(activeScrolls, "percentage", "hpRegen") / 5;
 
   const chakraFormula = 10 * level + energy * 50;
   const chakra =
@@ -95,7 +95,7 @@ export default function Home() {
   const chakraRegen =
     0.3 +
     energy * 0.01 +
-    calculateScroll(activeScrolls, "flat", "chakraRegen") / 5;
+    calculateScroll(activeScrolls, "percentage", "chakraRegen") / 5;
   const cooldownReduction =
     energy * 0.15 + calculateScroll(activeScrolls, "percentage", "cdr");
 
@@ -113,7 +113,8 @@ export default function Home() {
       (0 + calculateScroll(activeScrolls, "percentage", "defense")) +
     calculateScroll(activeScrolls, "flat", "defense");
   const criticalReduction =
-    protection * 0.1 + calculateScroll(activeScrolls, "percentage", "defense");
+    protection * 0.1 +
+    calculateScroll(activeScrolls, "percentage", "criticalReduction");
   const criticalChance =
     5 +
     critical * 0.2 +
@@ -209,9 +210,9 @@ export default function Home() {
           </form>
           <div className="flex flex-col">
             <span>Vida: {hp}</span>
-            <span>Regeneração de vida: {hpRegen}</span>
+            <span>Regeneração de vida: {hpRegen.toFixed(2)}%</span>
             <span>Chakra: {chakra}</span>
-            <span>Regeneração de chakra: {chakraRegen}</span>
+            <span>Regeneração de chakra: {chakraRegen.toFixed(2)}%</span>
             <span>Redução de cooldown: {cooldownReduction}%</span>
             <span>Dano: {damage}</span>
             <span>Defesa: {defense}</span>
