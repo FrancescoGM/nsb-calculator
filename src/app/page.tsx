@@ -14,11 +14,13 @@ function calculateScroll(
   type: Scroll["type"],
   stat: string
 ) {
-  const scroll = activeScrolls.find((s) => s.type === type && s.stat === stat);
+  const scrolls = activeScrolls.filter(
+    (s) => s.type === type && s.stat === stat
+  );
 
-  if (!scroll) return 0;
+  if (!scrolls) return 0;
 
-  return scroll.quantity * scroll.value;
+  return scrolls.reduce((acc, s) => acc + s.quantity * s.value, 0);
 }
 
 type ScrollCardProps = {
