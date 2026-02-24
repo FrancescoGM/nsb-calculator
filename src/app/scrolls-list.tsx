@@ -28,10 +28,7 @@ function ScrollCard({ scroll, updateScrollQuantity }: ScrollCardProps) {
           <label className="text-sm whitespace-nowrap">Quantidade:</label>
           <NumberInput
             value={scroll.quantity}
-            onChange={(e) => {
-              const val = e.target.value === "" ? 0 : Number(e.target.value);
-              updateScrollQuantity(scroll.id, val);
-            }}
+            onChange={(value) => updateScrollQuantity(scroll.id, value)}
             min={0}
             className="w-8"
           />

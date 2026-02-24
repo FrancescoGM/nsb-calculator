@@ -14,6 +14,21 @@ type StatKey =
 
 type StatsState = Record<StatKey, number>;
 
+type Derived = {
+  hp: number;
+  hpRegen: number;
+  chakra: number;
+  chakraRegen: number;
+  cooldownReduction: number;
+  damage: number;
+  defense: number;
+  criticalReduction: number;
+  criticalChance: number;
+  criticalDamage: number;
+  evasion: number;
+  defensePenetration: number;
+};
+
 const initialStats: StatsState = {
   level: 1,
   vitality: 0,
@@ -28,6 +43,7 @@ interface UseStatusContext {
   stats: StatsState;
   setStat: (key: StatKey, val: number) => void;
   availablePoints: number;
+  derived: Derived;
 
   scrolls: Scroll[];
   updateScrollQuantity: (id: string, value: number) => void;
@@ -79,6 +95,23 @@ function statsReducer(state: StatsState, action: StatAction): StatsState {
       return state;
   }
 }
+
+function calculateScrollBonus(
+  activeScrolls: Scroll[],
+  type: Scroll["type"],
+  stat: string
+): number {
+  const matching = activeScrolls.filter(
+    (s) => s.type === type && s.stat === stat
+  );
+  return matching.reduce((sum, s) => sum + s.quantity * s.value, 0);
+}
+
+const getPercent = (active: Scroll[], stat: string) =>
+  calculateScrollBonus(active, "percentage", stat);
+
+const getFlat = (active: Scroll[], stat: string) =>
+  calculateScrollBonus(active, "flat", stat);
 
 interface StatusProviderProps {
   children?: ReactNode;
@@ -138,11 +171,39 @@ export function StatusProvider({ children }: StatusProviderProps) {
     });
   };
 
+  const derived = useMemo(() => {
+    const p = (stat: string) => getPercent(activeScrolls, stat);
+    const f = (stat: string) => getFlat(activeScrolls, stat);
+
+    const hpBase = 5 * stats.level + stats.vitality * 30;
+    const chakraBase = 10 * stats.level + stats.energy * 50;
+    const dmgBase = 0.2 * stats.level + stats.power * 1;
+    const defBase = 0.05 * stats.level + stats.protection * 0.3;
+    const penBase = stats.dexterity * 0.3;
+
+    return {
+      hp: hpBase * (1 + p("hp")) + f("hp"),
+      hpRegen: 0.3 + stats.vitality * 0.01 + p("hpRegen"),
+      chakra: chakraBase * (1 + p("chakra")) + f("chakra"),
+      chakraRegen: 0.3 + stats.energy * 0.01 + p("chakraRegen"),
+      cooldownReduction: stats.energy * 0.15 + p("cdr"),
+      damage: dmgBase * (1 + p("damage")) + f("damage"),
+      defense: defBase * (1 + p("defense")) + f("defense"),
+      criticalReduction: stats.protection * 0.1 + p("criticalReduction"),
+      criticalChance: 5 + stats.critical * 0.2 + p("criticalChance"),
+      criticalDamage: 20 + stats.critical * 0.15 + p("criticalDamage"),
+      evasion: 5 + stats.dexterity * 0.15 + p("evasion"),
+      defensePenetration:
+        penBase * (1 + p("defensePenetration")) + f("defensePenetration"),
+    };
+  }, [activeScrolls, stats]);
+
   return (
     <Provider
       value={{
         stats,
         setStat,
+        derived,
         scrolls,
         updateScrollQuantity,
         activeScrolls,
