@@ -1,7 +1,7 @@
 "use client";
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent } from "react";
 
-import { NumberInputHook, NumberInputHookProps } from "./number-input.types";
+import { NumberInputHookProps } from "./number-input.types";
 
 const ONLY_NUMBERS_AND_SPACE = /[^0-9\s]/g;
 
@@ -10,26 +10,23 @@ function sanitize(value: string): string {
 }
 
 export const useNumberInput = ({
-  value: _value = "",
-  onChange: _onChange,
-}: NumberInputHookProps = {}): NumberInputHook => {
-  const [value, setValue] = useState(_value);
+  value: controlledValue = "",
+  onChange: externalOnChange,
+}: NumberInputHookProps = {}) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    const cleaned = sanitize(raw);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputText = e.target.value;
-    const sanitizedText = sanitize(inputText);
-    e.target.value = sanitizedText;
+    const synthetic = {
+      ...e,
+      target: { ...e.target, value: cleaned },
+    } as ChangeEvent<HTMLInputElement>;
 
-    setValue(sanitizedText);
-    _onChange?.(e);
+    externalOnChange?.(synthetic);
   };
 
-  useEffect(() => {
-    setValue(_value);
-  }, [_value]);
-
   return {
-    value,
-    onChange: handleInputChange,
+    value: controlledValue,
+    onChange: handleChange,
   };
 };

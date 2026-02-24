@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 import { InputProps } from "../input";
 
 export type NumberInputProps = InputProps & {
-  value?: number;
+  value: number;
 };
 
 export type NumberInputHookProps = {
