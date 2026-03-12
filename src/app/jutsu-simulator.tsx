@@ -45,7 +45,7 @@ export function JutsuSimulator() {
     let critDamage: number | null = 0;
     if (isCrit) {
       const critMultiplier = effectiveCritDamage / 100;
-      critDamage = finalDamage + finalDamage * critMultiplier;
+      critDamage = finalDamage * critMultiplier;
     }
 
     const newLog: JutsuLog = {
